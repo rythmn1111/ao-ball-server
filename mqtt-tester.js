@@ -9,7 +9,7 @@ client.on('connect', () => {
   console.log(`✅ Connected to MQTT broker: ${MQTT_BROKER}`);
   setInterval(() => {
     const dummyData = {
-      id: `device${Math.floor(Math.random() * 1000)}`,
+      id: `${Math.floor(Math.random() * 1000)}`,
       height: Math.floor(Math.random() * 100),
       speed: Math.floor(Math.random() * 20),
       strength: Math.floor(Math.random() * 10)
