@@ -55,12 +55,23 @@ client.on('message', async (topic, message) => {
       const data = JSON.parse(message.toString());
       console.log(`📥 MQTT:`, data);
 
-      // Construct Lua append code
+      // 1. Send to your process (append to throws via Lua)
       const luaCode = `table.insert(throws, { id = "${data.id}",height = ${data.height}, speed = ${data.speed}, strength = ${data.strength} })`;
-
-      // Send to AO
       const result = await sendLuaToAO(processId, luaCode);
       console.log(`📤 Sent to AO (ID: ${result.id})`);
+
+      // 2. Send to friend's process as JSON with ImportData action
+      const friendProcessId = "eyDQaQlKhHteWQTJU6xn_v8_3Ga7B4Xk16gcNgNXfjw";
+      const importDataTags = [
+        { name: "Action", value: "ImportData" }
+      ];
+      const importDataMessageId = await ao.message({
+        process: friendProcessId,
+        data: JSON.stringify(data),
+        signer: createDataItemSigner(wallet),
+        tags: importDataTags,
+      });
+      console.log(`📤 Sent to friend's process (ID: ${importDataMessageId})`);
     } catch (err) {
       console.error('❌ Message Error:', err);
     }
