@@ -9,10 +9,11 @@ client.on('connect', () => {
   console.log(`✅ Connected to MQTT broker: ${MQTT_BROKER}`);
   setInterval(() => {
     const dummyData = {
-      id: `${Math.floor(Math.random() * 1000)}`,
+      id: `device${Math.floor(Math.random() * 1000)}`,
       height: Math.floor(Math.random() * 100),
       speed: Math.floor(Math.random() * 20),
-      strength: Math.floor(Math.random() * 10)
+      strength: Math.floor(Math.random() * 10),
+      timestamp: new Date().toISOString()
     };
     client.publish(MQTT_TOPIC, JSON.stringify(dummyData), {}, (err) => {
       if (err) {
