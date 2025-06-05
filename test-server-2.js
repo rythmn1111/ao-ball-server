@@ -65,9 +65,18 @@ client.on('message', async (topic, message) => {
       const importDataTags = [
         { name: "Action", value: "ImportData" }
       ];
+      // Wrap the data as { "unique-id": { height, speed, strength } }
+      const uniqueId = data.id;
+      const payload = {
+        [uniqueId]: {
+          height: data.height,
+          speed: data.speed,
+          strength: data.strength
+        }
+      };
       const importDataMessageId = await ao.message({
         process: friendProcessId,
-        data: JSON.stringify(data),
+        data: JSON.stringify(payload),
         signer: createDataItemSigner(wallet),
         tags: importDataTags,
       });
